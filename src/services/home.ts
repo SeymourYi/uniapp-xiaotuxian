@@ -9,3 +9,10 @@ return http({
   }
 })
 }
+
+export const getHomeCategoryAPI=()=>{
+return http({
+  method:"GET",
+  url:'/home/category/mutli'
+})
+}
