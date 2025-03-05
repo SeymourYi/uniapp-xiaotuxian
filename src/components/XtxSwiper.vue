@@ -6,6 +6,12 @@ const onChange: UniHelper.SwiperOnChange =(ev)=>{
   console.log(ev.detail?.current);
 activeIndex.value=ev.detail!.current
 }
+
+const list= defineProps<{
+  List:any
+}>()
+console.log(list,"11");
+
 </script>
 
 <template>
@@ -13,30 +19,12 @@ activeIndex.value=ev.detail!.current
     <swiper
     @change="onChange"
     :circular="true" :autoplay="false" :interval="3000">
-      <swiper-item>
+      <swiper-item v-for="item in List" :key="item.id">
         <navigator url="/pages/index/index" hover-class="none" class="navigator">
           <image
             mode="aspectFill"
             class="image"
-            src="https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/uploads/slider_1.jpg"
-          ></image>
-        </navigator>
-      </swiper-item>
-      <swiper-item>
-        <navigator url="/pages/index/index" hover-class="none" class="navigator">
-          <image
-            mode="aspectFill"
-            class="image"
-            src="https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/uploads/slider_2.jpg"
-          ></image>
-        </navigator>
-      </swiper-item>
-      <swiper-item>
-        <navigator url="/pages/index/index" hover-class="none" class="navigator">
-          <image
-            mode="aspectFill"
-            class="image"
-            src="https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/uploads/slider_3.jpg"
+            :src="item.imgUrl"
           ></image>
         </navigator>
       </swiper-item>
@@ -44,8 +32,8 @@ activeIndex.value=ev.detail!.current
     <!-- 指示点 -->
     <view class="indicator">
       <text
-        v-for="(item, index) in 3"
-        :key="item"
+        v-for="(item, index) in List"
+        :key="item.id"
         class="dot"
         :class="{ active: index === activeIndex }"
       ></text>
