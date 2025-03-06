@@ -10,6 +10,7 @@ import CategoryPanel from './components/CategoryPanel.vue'
 const BannerList = ref([])
 const CategoryList = ref([])
 const HotList = ref([])
+const guessRef = ref()
 const getHomeBannerData = async () => {
   const res: any = await getHomeBannerAPI()
   BannerList.value = res.data.result
@@ -24,6 +25,10 @@ const getHomeHotData = async () => {
   HotList.value = res.data.result
   console.log(HotList.value)
 }
+const onscrolltolower = () => {
+  console.log('滚动触底了')
+  guessRef.value.getMore()
+}
 onLoad(() => {
   getHomeBannerData()
   getHomeCategoryData()
@@ -33,14 +38,23 @@ onLoad(() => {
 
 <template>
   <CustomNavbar />
-  <XtxSwiper :List="BannerList" />
-  <CategoryPanel :list="CategoryList" />
-  <HotPanel :list="HotList" />
-  <div>123</div>
+  <scroll-view @scrolltolower="onscrolltolower" class="Scroll-view" scroll-y>
+    <XtxSwiper :List="BannerList" />
+    <CategoryPanel :list="CategoryList" />
+    <HotPanel :list="HotList" />
+    <XtxGuess ref="guessRef" />
+    <div>123</div>
+  </scroll-view>
 </template>
 <style lang="scss">
 //
 page {
   background: #f7f7f7;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.Scroll-view {
+  flex: 1;
 }
 </style>
