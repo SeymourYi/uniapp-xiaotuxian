@@ -5,6 +5,7 @@ import CustomNavbar from '@/pages/index/components/CustomNavbar.vue'
 import { getHomeBannerAPI, getHomeCategoryAPI, getHomeHotAPI } from '@/services/home'
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
+import PageSkeleton from './components/PageSkeleton.vue'
 import HotPanel from './components/HotPanel.vue'
 import CategoryPanel from './components/CategoryPanel.vue'
 const BannerList = ref([])
@@ -12,6 +13,7 @@ const istriggered = ref(false)
 const CategoryList = ref([])
 const HotList = ref([])
 const guessRef = ref()
+const isLoading = ref(false)
 const getHomeBannerData = async () => {
   const res: any = await getHomeBannerAPI()
   BannerList.value = res.data.result
@@ -42,10 +44,11 @@ const onRefresherrefresh = async () => {
   istriggered.value = false
 }
 
-onLoad(() => {
-  getHomeBannerData()
-  getHomeCategoryData()
-  getHomeHotData()
+onLoad(async () => {
+  isLoading.value = true
+
+  await Promise.all([getHomeBannerData(), getHomeCategoryData(), getHomeHotData()])
+  isLoading.value = false
 })
 </script>
 
@@ -59,11 +62,13 @@ onLoad(() => {
     class="Scroll-view"
     scroll-y
   >
-    <XtxSwiper :List="BannerList" />
-    <CategoryPanel :list="CategoryList" />
-    <HotPanel :list="HotList" />
-    <XtxGuess ref="guessRef" />
-    <div>123</div>
+    <PageSkeleton v-if="isLoading" />
+    <template v-else>
+      <XtxSwiper :List="BannerList" />
+      <CategoryPanel :list="CategoryList" />
+      <HotPanel :list="HotList" />
+      <XtxGuess ref="guessRef" />
+    </template>
   </scroll-view>
 </template>
 <style lang="scss">
