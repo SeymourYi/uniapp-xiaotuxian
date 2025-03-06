@@ -7,15 +7,17 @@ import { onLoad } from '@dcloudio/uni-app';
 import { ref } from 'vue';
 import CategoryPanel from './components/CategoryPanel.vue';
 const BannerList=ref([])
+const CategoryList=ref([])
 const getHomeBannerData= async()=>{
  const res:any =await  getHomeBannerAPI()
  BannerList.value=res.data.result,
  console.log(BannerList.value);
 }
 const getHomeCategoryData=async()=>{
- const res=await getHomeCategoryAPI()
+ const res:any=await getHomeCategoryAPI()
+ CategoryList.value=res.data.result
   console.log('====================================');
-  console.log(res,"123");
+  console.log(CategoryList.value,"123");
   console.log('====================================');
 }
 onLoad(()=>{
@@ -27,7 +29,7 @@ onLoad(()=>{
 <template>
   <CustomNavbar />
   <XtxSwiper :List="BannerList" />
-  <CategoryPanel />
+  <CategoryPanel :list="CategoryList" />
 <div>123</div>
 </template>
 <style lang="scss">
