@@ -8,6 +8,7 @@ import { ref } from 'vue'
 import HotPanel from './components/HotPanel.vue'
 import CategoryPanel from './components/CategoryPanel.vue'
 const BannerList = ref([])
+const istriggered = ref(false)
 const CategoryList = ref([])
 const HotList = ref([])
 const guessRef = ref()
@@ -29,6 +30,18 @@ const onscrolltolower = () => {
   console.log('滚动触底了')
   guessRef.value.getMore()
 }
+const onRefresherrefresh = async () => {
+  istriggered.value = true
+  guessRef.value?.resetData()
+  await Promise.all([
+    getHomeBannerData(),
+    getHomeCategoryData(),
+    getHomeHotData(),
+    guessRef.value?.getMore(),
+  ])
+  istriggered.value = false
+}
+
 onLoad(() => {
   getHomeBannerData()
   getHomeCategoryData()
@@ -38,7 +51,14 @@ onLoad(() => {
 
 <template>
   <CustomNavbar />
-  <scroll-view @scrolltolower="onscrolltolower" class="Scroll-view" scroll-y>
+  <scroll-view
+    refresher-enabled
+    :refresher-triggered="istriggered"
+    @refresherrefresh="onRefresherrefresh"
+    @scrolltolower="onscrolltolower"
+    class="Scroll-view"
+    scroll-y
+  >
     <XtxSwiper :List="BannerList" />
     <CategoryPanel :list="CategoryList" />
     <HotPanel :list="HotList" />

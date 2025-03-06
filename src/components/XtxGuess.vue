@@ -3,7 +3,6 @@ import { getHomeGoodsGuessLikeAPI } from '@/services/home'
 import type { GoodsItem, PageParams } from '@/types/component'
 import { onLoad } from '@dcloudio/uni-app'
 import { onMounted, ref } from 'vue'
-
 //
 const pageParams: Required<PageParams> = {
   page: 1,
@@ -24,12 +23,18 @@ const getHomeGoodsGuessLikeData = async () => {
     finish.value = true
   }
 }
+const resetData = () => {
+  pageParams.page = 1
+  guessList.value = []
+  finish.value = false
+}
 onMounted(() => {
   getHomeGoodsGuessLikeData()
 })
 
 defineExpose({
   getMore: getHomeGoodsGuessLikeData,
+  resetData: resetData,
 })
 </script>
 
